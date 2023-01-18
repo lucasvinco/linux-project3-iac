@@ -1,15 +1,10 @@
 #!/bin/bash
-ssh-keyscan -H 192.168.73.128 >> ~/.ssh/known_hosts
-ssh-keyscan -H 192.168.73.130 >> ~/.ssh/known_hosts
-scp ./* lucas@192.168.73.128:/tmp
-scp ./* lucas@192.168.73.130:/tmp
+# duplicate each block of code according to the number of nodes
+# change 'node_ip' with IP address of node
+# cahnge 'user' with user account of node
+# change 'rootpass' with user account password of node
+ssh-keyscan -H node_ip >> ~/.ssh/known_hosts
 
-ssh lucas@192.168.73.128
-sudo ./tmp/install_config_docker.sh lucas
-./tmp/config_docker_compose_v2.sh
-./tmp/worker.sh
-
-ssh lucas@192.168.73.130
-sudo ./tmp/install_config_docker.sh lucas
-./tmp/config_docker_compose_v2.sh
-./tmp/worker.sh
+ssh user@node_ip 'echo "rootpass" | sudo -Sv && bash -s user' < install_config_docker.sh
+ssh user@node_ip 'bash -s' < config_docker_compose_v2.sh
+ssh user@node_ip 'bash -s' < worker.sh
